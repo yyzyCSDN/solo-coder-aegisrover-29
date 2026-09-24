@@ -14,8 +14,9 @@ def integrate(state: ImuState, time: float, accel: float):
     dt = time - state.time
     if dt < 0:
         raise ValueError('non-monotonic imu time')
-    state.position += state.velocity * dt + 0.5 * accel * dt * dt
-    state.velocity += (accel - state.bias) * dt
+    corrected = accel - state.bias
+    state.position += state.velocity * dt + 0.5 * corrected * dt * dt
+    state.velocity += corrected * dt
     state.time = time
     return state
 
